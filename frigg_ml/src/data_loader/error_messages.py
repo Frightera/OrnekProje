@@ -1,6 +1,7 @@
 from enum import Enum
 
-SUPPORTED_FILE_EXTENSIONS = {".csv", ".parquet"}
+SUPPORTED_FILE_EXTENSIONS = [".csv", ".parquet"]
+
 
 class DataReadingErrorMessages(Enum):
     INVALID_FILE_PATH_TYPE = "Invalid file path type: {type}. Expected str or Path."
