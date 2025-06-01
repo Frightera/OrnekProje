@@ -1,0 +1,13 @@
+features:
+  numerical:
+    - Col_0
+    - Col_1
+    - Col_2
+    - Col_3
+steps:
+  categorical:
+    imputer: SimpleImputer
+    encoder: OneHotEncoder
+  numerical:
+    imputer: SimpleImputer
+    scaler: StandardScaler

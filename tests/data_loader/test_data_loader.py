@@ -22,7 +22,7 @@ def test_load_data_with_valid_file(
 ):
     file_path = test_datasets_path / file_name
     expected_df = request.getfixturevalue(expected_data)
-    
+
     data = data_loader.load_data(file_path)
     assert isinstance(data, pd.DataFrame)
     pd.testing.assert_frame_equal(data, expected_df)
@@ -34,11 +34,9 @@ def test_load_data_with_valid_file(
         pytest.param("test_empty.csv", id="empty_csv"),
     ],
 )
-def test_load_data_with_empty_file(
-    data_loader, test_datasets_path, file_name
-):
+def test_load_data_with_empty_file(data_loader, test_datasets_path, file_name):
     file_path = test_datasets_path / file_name
-    
+
     with pytest.raises(ValueError, match="Error loading data: File is empty."):
         data_loader.load_data(file_path)
 
