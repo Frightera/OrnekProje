@@ -1,0 +1,21 @@
+features:
+  categorical:
+    - city
+steps:
+  categorical:
+    imputer: SimpleImputer
+    imputer_kwargs:
+      strategy: most_frequent
+      fill_value: "unknown"
+    encoder: OneHotEncoder
+    encoder_kwargs:
+      handle_unknown: ignore
+      sparse_output: false
+  numerical:
+    imputer: SimpleImputer
+    imputer_kwargs:
+      strategy: mean
+    scaler: StandardScaler
+    scaler_kwargs:
+      with_mean: true
+      with_std: true

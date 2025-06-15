@@ -25,6 +25,8 @@ class CategoricalStepsConfig(BaseModel):
 
     imputer: Optional[str] = None
     encoder: Optional[str] = None
+    imputer_kwargs: Optional[dict] = Field(default_factory=dict)
+    encoder_kwargs: Optional[dict] = Field(default_factory=dict)
 
 
 class NumericalStepsConfig(BaseModel):
@@ -34,6 +36,8 @@ class NumericalStepsConfig(BaseModel):
 
     imputer: Optional[str] = None
     scaler: Optional[str] = None
+    imputer_kwargs: Optional[dict] = Field(default_factory=dict)
+    scaler_kwargs: Optional[dict] = Field(default_factory=dict)
 
 
 class StepsConfig(BaseModel):
