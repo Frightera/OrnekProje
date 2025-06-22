@@ -11,6 +11,11 @@ if project_root not in sys.path:
 
 
 @pytest.fixture
+def config_path():
+    return Path(project_root) / "tests" / "test_datasets" / "test_config.yaml"
+
+
+@pytest.fixture
 def test_datasets_path():
     """Fixture to provide the path to the test datasets."""
     return Path(project_root) / "tests" / "test_datasets"
@@ -20,6 +25,7 @@ def test_datasets_path():
 def empty_dataset(test_datasets_path):
     """Fixture to provide an empty dataset path."""
     return pd.read_csv(test_datasets_path / "test_empty.csv")
+
 
 @pytest.fixture
 def _csv_data(test_datasets_path):
