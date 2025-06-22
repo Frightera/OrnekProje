@@ -5,7 +5,6 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.compose import ColumnTransformer
 
 from .load_config import PreprocessorConfig
-from sklearn.impute import SimpleImputer
 
 
 class DataPreprocessor(BaseEstimator, TransformerMixin):
@@ -44,6 +43,37 @@ class DataPreprocessor(BaseEstimator, TransformerMixin):
         except (ValueError, ImportError, AttributeError):
             raise ImportError(f"Could not import {class_name}")
 
+    def _create_step_from_config(
+        self, step_name, step_config, config_attr_name, kwargs_attr_name
+    ):
+        """
+        Create a pipeline step from configuration.
+
+        Args:
+            step_name (str): Name of the step (e.g., 'imputer', 'scaler', 'encoder')
+            step_config: The configuration object containing the step settings
+            config_attr_name (str): Name of the attribute containing the class name
+            kwargs_attr_name (str): Name of the attribute containing the kwargs
+
+        Returns:
+            tuple: (step_name, instantiated_class) or None if step is not configured
+        """
+        if not step_config or not hasattr(step_config, config_attr_name):
+            return None
+
+        class_name = getattr(step_config, config_attr_name)
+        if not class_name:
+            return None
+
+        step_class = self._get_class_from_config(class_name)
+
+        # Get kwargs from config or use defaults
+        step_kwargs = {}
+        if hasattr(step_config, kwargs_attr_name):
+            step_kwargs = getattr(step_config, kwargs_attr_name) or {}
+
+        return (step_name, step_class(**step_kwargs))
+
     def _build_column_transformer(self):
         transformers = []
 
@@ -52,29 +82,19 @@ class DataPreprocessor(BaseEstimator, TransformerMixin):
             for feature in self.config.features.numerical:
                 steps = []
 
-                # Get imputer class from config
-                if self.config.steps.numerical and self.config.steps.numerical.imputer:
-                    imputer_class = self._get_class_from_config(
-                        self.config.steps.numerical.imputer
-                    )
-                    # Get kwargs from config or use defaults
-                    imputer_kwargs = {}
-                    if hasattr(self.config.steps.numerical, "imputer_kwargs"):
-                        imputer_kwargs = (
-                            self.config.steps.numerical.imputer_kwargs or {}
-                        )
-                    steps.append(("imputer", imputer_class(**imputer_kwargs)))
+                # Add imputer step if configured
+                imputer_step = self._create_step_from_config(
+                    "imputer", self.config.steps.numerical, "imputer", "imputer_kwargs"
+                )
+                if imputer_step:
+                    steps.append(imputer_step)
 
-                # Get scaler class from config
-                if self.config.steps.numerical and self.config.steps.numerical.scaler:
-                    scaler_class = self._get_class_from_config(
-                        self.config.steps.numerical.scaler
-                    )
-                    # Get kwargs from config or use defaults
-                    scaler_kwargs = {}
-                    if hasattr(self.config.steps.numerical, "scaler_kwargs"):
-                        scaler_kwargs = self.config.steps.numerical.scaler_kwargs or {}
-                    steps.append(("scaler", scaler_class(**scaler_kwargs)))
+                # Add scaler step if configured
+                scaler_step = self._create_step_from_config(
+                    "scaler", self.config.steps.numerical, "scaler", "scaler_kwargs"
+                )
+                if scaler_step:
+                    steps.append(scaler_step)
 
                 if steps:  # Only create a pipeline if there are steps
                     numerical_pipeline = Pipeline(steps=steps)
@@ -85,37 +105,25 @@ class DataPreprocessor(BaseEstimator, TransformerMixin):
             for feature in self.config.features.categorical:
                 steps = []
 
-                # Get imputer class from config
-                if (
-                    self.config.steps.categorical
-                    and self.config.steps.categorical.imputer
-                ):
-                    imputer_class = self._get_class_from_config(
-                        self.config.steps.categorical.imputer
-                    )
-                    # Get kwargs from config or use defaults
-                    imputer_kwargs = {}
-                    if hasattr(self.config.steps.categorical, "imputer_kwargs"):
-                        imputer_kwargs = (
-                            self.config.steps.categorical.imputer_kwargs or {}
-                        )
-                    steps.append(("imputer", imputer_class(**imputer_kwargs)))
+                # Add imputer step if configured
+                imputer_step = self._create_step_from_config(
+                    "imputer",
+                    self.config.steps.categorical,
+                    "imputer",
+                    "imputer_kwargs",
+                )
+                if imputer_step:
+                    steps.append(imputer_step)
 
-                # Get encoder class from config
-                if (
-                    self.config.steps.categorical
-                    and self.config.steps.categorical.encoder
-                ):
-                    encoder_class = self._get_class_from_config(
-                        self.config.steps.categorical.encoder
-                    )
-                    # Get kwargs from config or use defaults
-                    encoder_kwargs = {}
-                    if hasattr(self.config.steps.categorical, "encoder_kwargs"):
-                        encoder_kwargs = (
-                            self.config.steps.categorical.encoder_kwargs or {}
-                        )
-                    steps.append(("encoder", encoder_class(**encoder_kwargs)))
+                # Add encoder step if configured
+                encoder_step = self._create_step_from_config(
+                    "encoder",
+                    self.config.steps.categorical,
+                    "encoder",
+                    "encoder_kwargs",
+                )
+                if encoder_step:
+                    steps.append(encoder_step)
 
                 if steps:  # Only create a pipeline if there are steps
                     categorical_pipeline = Pipeline(steps=steps)
