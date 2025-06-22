@@ -9,9 +9,11 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
+
 @pytest.fixture
 def config_path():
     return Path(project_root) / "tests" / "test_datasets" / "test_config.yaml"
+
 
 @pytest.fixture
 def test_datasets_path():
