@@ -5,11 +5,11 @@ from sklearn.model_selection import train_test_split
 
 @pytest.fixture
 def classification_data():
-        """Generate sample classification data."""
-        X, y = make_classification(
-            n_samples=100, n_features=10, n_classes=2, random_state=42
-        )
-        return train_test_split(X, y, test_size=0.3, random_state=42)
+    """Generate sample classification data."""
+    X, y = make_classification(
+        n_samples=100, n_features=10, n_classes=2, random_state=42
+    )
+    return train_test_split(X, y, test_size=0.3, random_state=42)
     
 @pytest.fixture
 def regression_data():
