@@ -11,5 +11,5 @@ from .model_training import (
 __all__ = [
     "ModelTrainer",
     "BaseCustomModel",
-    "SklearnCompatibleModel", 
+    "SklearnCompatibleModel",
 ]

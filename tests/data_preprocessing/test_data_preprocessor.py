@@ -1,12 +1,8 @@
-import pytest
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.impute import SimpleImputer
 
 from frigg_ml.src.data_preprocessing import DataPreprocessor
-from frigg_ml.src.data_preprocessing import load_config, PreprocessorConfig
-from frigg_ml.src.data_loader import DataLoader
+from frigg_ml.src.data_preprocessing import PreprocessorConfig
 
 
 def _create_test_data_and_expectations():
@@ -50,10 +46,7 @@ def _create_test_data_and_expectations():
     return data, col_0_imputed, col_1_imputed, expected_ohe, col_0_mean, col_1_mean
 
 
-def test_data_preprocessor_building(preprocessor, test_datasets_path):
-    loader = DataLoader()
-    test_path = test_datasets_path / "test.csv"
-    data = loader.load_data(test_path)
+def test_data_preprocessor_building(preprocessor):
 
     assert preprocessor is not None
     assert isinstance(preprocessor, DataPreprocessor)

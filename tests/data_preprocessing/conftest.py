@@ -1,7 +1,6 @@
 import pytest
 
 from frigg_ml.src.data_preprocessing import DataPreprocessor, load_config
-from pathlib import Path
 
 
 @pytest.fixture

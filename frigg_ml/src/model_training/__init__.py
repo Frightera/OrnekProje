@@ -13,6 +13,6 @@ from .custom_models import (
 
 __all__ = [
     "ModelTrainer",
-    "BaseCustomModel", 
+    "BaseCustomModel",
     "SklearnCompatibleModel",
 ]
