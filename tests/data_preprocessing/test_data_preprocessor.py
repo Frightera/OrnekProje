@@ -50,7 +50,6 @@ def _create_test_data_and_expectations():
 def test_data_preprocessor_building(preprocessor, test_datasets_path):
     loader = DataLoader()
     test_path = test_datasets_path / "test.csv"
-    data = loader.load_data(test_path)
 
     assert preprocessor is not None
     assert isinstance(preprocessor, DataPreprocessor)
