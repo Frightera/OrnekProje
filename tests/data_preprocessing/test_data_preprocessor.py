@@ -1,11 +1,8 @@
-import pytest
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.impute import SimpleImputer
 
 from frigg_ml.src.data_preprocessing import DataPreprocessor
-from frigg_ml.src.data_preprocessing import load_config, PreprocessorConfig
+from frigg_ml.src.data_preprocessing import PreprocessorConfig
 from frigg_ml.src.data_loader import DataLoader
 
 
